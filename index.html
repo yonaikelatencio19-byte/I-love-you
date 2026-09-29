@@ -19,7 +19,7 @@
       --leaf-2: #db5d3d;
       --leaf-3: #f2be6d;
       --leaf-4: #c86f3e;
-      --text: #fffaf1;
+      --text: #1a1410;
       --shadow: rgba(80, 42, 32, 0.3);
     }
 
@@ -140,7 +140,7 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       color: var(--text);
-      text-shadow: 0 4px 18px rgba(124, 62, 35, 0.3);
+      text-shadow: 0 2px 6px rgba(255,255,255,0.4);
       text-align: center;
       width: 90%;
     }
@@ -151,8 +151,8 @@
       bottom: 18px;
       font-size: 14px;
       letter-spacing: 2px;
-      color: rgba(255, 243, 223, 0.92);
-      text-shadow: 0 2px 8px rgba(88, 45, 20, 0.2);
+      color: #1a1410;
+      text-shadow: 0 1px 4px rgba(255,255,255,0.3);
       z-index: 30;
       font-weight: 600;
     }
@@ -333,6 +333,59 @@
       }
     }
 
+    .birds {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    .bird {
+      position: absolute;
+      width: 28px;
+      height: 14px;
+      animation: fly linear infinite;
+    }
+
+    .bird::before, .bird::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 10px;
+      background: #2a1810;
+      border-radius: 50% 50% 40% 40%;
+      top: 2px;
+    }
+
+    .bird::before {
+      left: 0;
+      animation: wingFlap 0.3s ease-in-out infinite;
+    }
+
+    .bird::after {
+      right: 0;
+      animation: wingFlap 0.3s ease-in-out infinite reverse;
+    }
+
+    @keyframes wingFlap {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.5); }
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translateX(var(--startX)) translateY(var(--startY));
+        opacity: 0;
+      }
+      5% { opacity: 1; }
+      95% { opacity: 1; }
+      100% {
+        transform: translateX(var(--endX)) translateY(var(--endY));
+        opacity: 0;
+      }
+    }
+
     @media (max-width: 620px) {
       .message {
         top: 25px;
@@ -393,11 +446,14 @@
 
     <div id="leaves"></div>
 
+    <div class="birds"></div>
+
     <div class="signature">Ari x Archer</div>
   </div>
 
   <script>
-    const container = document.getElementById("leaves");
+    // Crear hojas
+    const leafContainer = document.getElementById("leaves");
 
     for (let i = 0; i < 28; i++) {
       const leaf = document.createElement("span");
@@ -423,7 +479,30 @@
       leaf.style.animationDuration = (7 + Math.random() * 8).toFixed(2) + "s";
       leaf.style.setProperty("--drift", ((-60 + Math.random() * 120).toFixed(2)) + "px");
 
-      container.appendChild(leaf);
+      leafContainer.appendChild(leaf);
+    }
+
+    // Crear pájaros
+    const birdContainer = document.querySelector(".birds");
+
+    for (let i = 0; i < 8; i++) {
+      const bird = document.createElement("div");
+      bird.className = "bird";
+
+      const startX = Math.random() * 100 - 50;
+      const startY = 40 + Math.random() * 120;
+      const endX = startX + (150 + Math.random() * 200);
+      const endY = startY - 30 + Math.random() * 40;
+      const duration = 8 + Math.random() * 6;
+
+      bird.style.setProperty("--startX", startX + "px");
+      bird.style.setProperty("--startY", startY + "px");
+      bird.style.setProperty("--endX", endX + "px");
+      bird.style.setProperty("--endY", endY + "px");
+      bird.style.animationDuration = duration + "s";
+      bird.style.animationDelay = (Math.random() * 4) + "s";
+
+      birdContainer.appendChild(bird);
     }
   </script>
 </body>
